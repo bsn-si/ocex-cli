@@ -1,0 +1,41 @@
+{
+   "name": "ocex-cli",
+   "version": "1.0.0",
+   "description": "Ocex cli tool for interact with your coupons and contracts",
+   "author": "Anton Shramko <antonshramko@yandex.ru>",
+   "license": "Apache-2.0",
+   "type": "commonjs",
+   "main": "dist/index.js",
+   "bin": "dist/index.js",
+   "scripts": {
+      "style:fix": "prettier --config .prettierrc.js 'src/**/*.{ts,tsx}' --write",
+      "lint:fix": "eslint '*/**/*.{ts,tsx}' --quiet --fix",
+      "fix:all": "npm run style:fix && npm run lint:fix",
+      "typeorm": "typeorm-ts-node-commonjs",
+      "copy:wasm": "copyfiles -f src/assets/ocex.wasm dist/assets",
+      "build": "npm run copy:wasm && tsc -p tsconfig.json",
+      "build:watch": "yarn build -w",
+      "start": "node dist/index.js",
+      "install:global": "npm install && npm run build && npm i -g"
+   },
+   "dependencies": {
+      "better-sqlite3": "^7.0.0",
+      "bn.js": "^5.2.0",
+      "chalk": "4.1.2",
+      "commander": "^9.2.0",
+      "easy-table": "^1.2.0",
+      "ocex-api": "bsn-si/ocex-api",
+      "reflect-metadata": "^0.1.13",
+      "typeorm": "0.3.6"
+   },
+   "devDependencies": {
+      "@types/bn.js": "^5.1.0",
+      "@types/node": "^16.11.10",
+      "@typescript-eslint/eslint-plugin": "^5.23.0",
+      "@typescript-eslint/parser": "^5.23.0",
+      "copyfiles": "^2.4.1",
+      "eslint": "^8.2.0",
+      "tslib": "^2.4.0",
+      "typescript": "4.5.2"
+   }
+}
