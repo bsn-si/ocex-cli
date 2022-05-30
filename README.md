@@ -7,7 +7,7 @@
     🎟️ ✨ OCEX CLI Client 🎁 👛
 </h1>
 
-OCEX smartcontract cli for interact with smartcontract.
+OCEX smartcontract CLI management tool.
 
 ## Features
 - [Owners](#owners)
@@ -35,25 +35,26 @@ OCEX smartcontract cli for interact with smartcontract.
     - [Burn](#burn)
 
 ## Install && Usage
-After that you give access to `ocex-cli` command in you environment.
-`Tested on MacOS & Linux`
 
+To give access to `ocex-cli` command in your environment:
 ```
 git clone git@github.com:bsn-si/ocex-cli.git
 cd ocex-cli/ && npm run install:global
 ```
+`Tested on MacOS & Linux`
 
-## Before interact
-Some operations need for node RPC. By default used `127.0.0.1:9944` for connect dev enviroment. For that you can install [substrate-contracts-node](https://github.com/paritytech/substrate-contracts-node).
+## Before interaction
+For some operations a node RPC is needed, by default `127.0.0.1:9944` is used.
+You can install [substrate-contracts-node](https://github.com/paritytech/substrate-contracts-node).
 
 ## Usage
-By default you can use `--help` for give info about all commands & options.
+Please use `--help` to get info about all commands & options.
 
 ``` bash
 ➜  ~ ocex-cli 
 Usage: ocex-cli [options] [command]
 
-Tool for interact with ocex - manage contracts & coupons
+Tool to interact with OCEX - manage contracts & coupons
 
 Options:
   -V, --version   output the version number
@@ -67,10 +68,10 @@ Commands:
 ```
 
 ### Owners
-Owners is users who interact with contracts and who pay for all transactions. And all contracts need assign to owner.
+An owner is a user who manages the smart-contract and pays for all management transactions. All contracts need an owner to be assigned.
 
 #### Create
-You can add new owner from secret key, and also set alias name to simple use owner for other commands. As example for add default keyring `//Alice` account:
+You can sign a new owner with his secret key, and also set alias name to simplify other commands. E.g. adding default keyring `//Alice` account:
 
 ``` bash
 ➜  ~ ocex-cli owner create 0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a --name=Alice
@@ -81,7 +82,7 @@ id  name   🗒️ address
 ```
 
 #### Update
-You can update owner alias name, or secret key - but remebmer, its dangerous because all transactions for exists contracts will signed with this key.
+You can update owner alias name, or his secret key. E.g. this can be done after transferring ownership of the contract. Secret key should be changed with care as all transactions for existing contracts will be signed with this key.
 
 ``` bash
 ➜  ~ ocex-cli owner update Alice --name=Bob --secret=0x398f0c28f98885e046333d4a41c19cee4c37368a9832c6502f6cfd182e2aef89
@@ -92,7 +93,7 @@ id  name  🗒️ address
 ```
 
 #### Remove
-Its dangerous operation, because with owner will be remove all related contract & coupons from database. Delete looks like:
+An owner can be removed, all related contracts & coupons will be removed from the management tool DB as well. Delete looks like:
 
 ``` bash
 ➜  ~ ocex-cli owner remove Bob
@@ -103,7 +104,7 @@ id  name  🗒️ address
 ```
 
 #### List
-For see list of all owners.
+To see the list of all owners:
 
 ``` bash
 ➜  ~ ocex-cli owner list
@@ -113,7 +114,7 @@ id  name   🗒️ address                                                      
 ```
 
 #### Balance
-You can check current owner balance.
+To check current owner's balance:
 
 ``` bash
 ➜  ~ ocex-cli owner balance Alice
@@ -124,10 +125,10 @@ You can check current owner balance.
 ```
 
 ### Contracts
-You can interact with ocex contracts instances, you can instantiate new contracts, and call all methods. All methods called & signed by related owner.
+All methods are called & signed by a related owner.
 
 #### Create
-You can create new contract, with preset exist contract address - or instantiate new. For instantiate new contract:
+You can create a new contract or add an existing one with preset contract address. To instantiate a new contract:
 
 ``` bash
 ➜  ~ ocex-cli contract create --name=SampleContract --owner=Alice
@@ -144,7 +145,7 @@ id  name            🗒️ address                                             
 ```
 
 #### Update
-You can update contract alias name and address - but its dangerous operation, because required coupons may not published for another contract instance.
+You can update contract alias name and address. This should be done with care as history and registered coupons are not transferred to the new contract.
 
 ``` bash 
 ➜  ~ ocex-cli contract update SampleContract --name=MyContract
@@ -155,7 +156,7 @@ id  name        🗒️ address                                                 
 ```
 
 #### Remove
-Its dangerous operation, because with contract will be remove all related coupons from database. Delete looks like:
+All related coupons (with corresponding private keys) will be removed from the management tool DB and not restored even after reconnecting the contract to the CLI. Delete looks like:
 
 ``` bash
 ➜  ~ ocex-cli contract remove MyContract                      
@@ -166,7 +167,7 @@ id  name        🗒️ address                                                 
 ```
 
 #### List
-List all contracts
+List of all contracts
 
 ``` bash
 ➜  ~ ocex-cli contract list
@@ -176,7 +177,7 @@ id  name            🗒️ address                                             
 ```
 
 #### Fill balance
-For interact with you contract and add coupons - you need fill balance. With this command you fill contract balance from their owner funds. 
+To interact with a contract and register coupons the contract balance should be toped up. With this command you top up the contract's balance with the owner's funds. 
 
 ``` bash
 ➜  ~ ocex-cli contract fill SampleContract --amount=100 --unit=Unit
@@ -189,7 +190,7 @@ For interact with you contract and add coupons - you need fill balance. With thi
 ```
 
 #### Balance
-For check contract balance
+To check the contract's balance
 
 ``` bash
 ➜  ~ ocex-cli contract balance SampleContract                         
@@ -200,8 +201,8 @@ For check contract balance
 💰 Contract Balance: 100 Unit (100000000000000 Pico) 
 ```
 
-#### Payback
-You can payback not reserved funds from you contract.
+#### Withdraw
+You can withdraw free funds from the contract (that are not reserved for registered coupons).
 
 ``` bash
 ➜  ~ ocex-cli contract payback SampleContract
@@ -213,7 +214,7 @@ You can payback not reserved funds from you contract.
 ```
 
 #### Transfer ownership
-You can transfer ownership to another owner from you database. At now you can`t transfer ownership to another users not from cli db.
+You can transfer ownership to another owner from you database (notice: the new owner should bу previously added to the DB).
 
 ``` bash
 ➜  ~ ocex-cli contract transfer_ownership SampleContract --owner=Bob
@@ -225,10 +226,10 @@ id  name            🗒️ address                                             
 ```
 
 ### Coupons
-Interact with contract coupons, you can add new, check its, burn, and activate that.
+You can add new coupons to the contract, activate them, check coupon's balance and burn.
 
 #### Create
-You can create coupons and add to blockchain store.
+You can create coupons and add to the smart-contract.
 
 ``` bash
 ➜  ~ ocex-cli coupon create --amount=10 --unit=Unit --contract=SampleContract
@@ -240,7 +241,7 @@ id  name            🎟️ coupon public                                       
 ```
 
 #### Update
-You can update coupon alias name and secret key, but its dangerous because not be sync with contract.
+You can update coupon alias name and secret key. This feature is just for testing purposes as it doesn't sync the new alias or the secret key with the contract. Can be blocked in product versions.
 
 ``` bash
 ➜  ~ ocex-cli coupon update 1 --name=SampleCoupon
@@ -251,7 +252,7 @@ id  name          🎟️ coupon public                                         
 ```
 
 #### Check
-You can check coupon, and give common details
+You can check coupon and get it's details
 
 ``` bash
 ➜  ~ ocex-cli coupon check SampleCoupon
@@ -266,7 +267,7 @@ You can check coupon, and give common details
 ```
 
 #### Activate
-You can activate coupon, and give funds or enter receiver.
+Coupon activation and transferring funds.
 
 ``` bash
 ➜  ~ ocex-cli coupon activate SampleCoupon --address=0x90b5ab205c6974c9ea841be688864633dc9ca8a357843eeacf2314649965fe22
@@ -279,7 +280,7 @@ Coupon:             0x3e7ea8de731b02a4428e06864809c54e777f99486f0cb3da3e4d58ec49
 ```
 
 #### Burn
-You can burn coupon, after that this mark as burned, and free reserved funds. After that nobody can activate this coupon. 
+An owner can burn a coupon. The coupon gets a "burnt" mark and releases reserved funds. A burnt coupon can not get reactivated. 
 
 ``` bash
 ➜  ~ ocex-cli coupon burn 2                                                  
@@ -292,7 +293,7 @@ Coupon:             0x8887cbeecc45fabd92f07fc23f67ef1bbae471edbfa9a8637b8e637d5c
 ```
 
 #### List
-List all coupons.
+List of all coupons.
 
 ``` bash
 ➜  ~ ocex-cli coupon list
@@ -303,7 +304,7 @@ id  name            🎟️ coupon public                                       
 ```
 
 #### Remove
-Remove coupon from database.
+Remove a coupon from the management tool DB.
 
 ``` bash
 ➜  ~ ocex-cli coupon remove SampleCoupon
