@@ -1,3 +1,4 @@
+## Disclaimer
 > 💀 This is a **Work in Progress**.  
 > Current status: Common PoC data storage and methods available. Partially tested.   
 > **Use at your own risk**.
@@ -313,4 +314,4 @@ id  name          🎟️ coupon public                                         
 ```
 
 ## License
-[Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/) © Bela Supernova ([bsn.si](https://bsn.si))
+[Apache License 2.0](https://github.com/bsn-si/ocex-cli/blob/main/LICENSE) © Bela Supernova ([bsn.si](https://bsn.si))
