@@ -1,7 +1,10 @@
 import { InvalidArgumentError } from "commander"
 import { polkadot } from "ocex-api"
-import { keyring } from "../utils"
+import * as path from "path"
+import * as fs from "fs"
 import BN from "bn.js"
+
+import { keyring } from "../utils"
 
 const ALIAS_NAME_REGEX = /^[a-zA-Z0-9]+$/
 
@@ -61,5 +64,26 @@ export const aliasName = (value: string) => {
     throw new InvalidArgumentError(
       `Accepted only simple name (like ${ALIAS_NAME_REGEX.toString()})`,
     )
+  }
+}
+
+export const encryptedJson = (jsonPath: string) => {
+  try {
+    const file = fs.readFileSync(path.resolve(jsonPath), { encoding: "utf8" })
+    const account = JSON.parse(file)
+    
+    if (
+      typeof account !== "object" ||
+      !account.encoded ||
+      !account.encoding ||
+      !account.address ||
+      !account.meta
+    ) {
+      throw new Error("Invalid json scheme")
+    }
+
+    return JSON.stringify(account)
+  } catch (error) {
+    throw new InvalidArgumentError(error.message)
   }
 }

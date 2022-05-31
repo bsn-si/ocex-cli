@@ -1,4 +1,4 @@
-import { BalanceGrade, getBalance } from "ocex-api"
+import { BalanceGrade, getBalance, polkadot } from "ocex-api"
 import { DataSource, Repository } from "typeorm"
 import Table from "easy-table"
 import chalk from "chalk"
@@ -7,7 +7,7 @@ import BN from "bn.js"
 import { Contract } from "../entity/contract"
 import { Owner } from "../entity/owner"
 
-import { fmtBalance, fmtList, keyring, log } from "../utils"
+import { fmtAddress, fmtBalance, fmtList, log } from "../utils"
 import * as couponMethods from "./coupon"
 import * as ownerMethods from "./owner"
 import { config } from "../config"
@@ -52,8 +52,12 @@ const _print = (data: Contract | Contract[], action?: string) => {
   const _row = (record: Contract) => {
     table.cell("id", record.id)
     table.cell("name", record.name || "<unnamed>")
-    table.cell("🗒️ address", record.address)
-    table.cell("🎈 published", record.published ? "Yes" : "No")
+    
+    table.cell(
+      `🗒️ address (${config.display.ss58 ? "ss58" : "hex"})`,
+      fmtAddress(record.address)
+    )
+
     
     record?.owner && table.cell("👤 owner", `id: ${record.owner.id} <${record.owner.name || "unnamed"}>`)
     record?.coupons && table.cell("🎟️ coupons (count)", record.coupons.length)
@@ -123,14 +127,11 @@ export async function create(
     new Contract(),
     opts,
     { owner, address },
-    { published: !!address },
   )
 
   if (!address) {
-    const pair = keyring.addFromUri(owner.secret)
-    const address = await сontractInstantiate(pair)
+    const address = await сontractInstantiate(owner)
     record.address = address
-    record.published = true
   }
 
   const contract = await repository.save(record)
@@ -197,8 +198,8 @@ export async function balance(dataSource: DataSource, selector: string) {
 
   log(
     fmtList([
-      ["📝 Contract:", `${contract.address} <${contract.name || "unnamed"}>`, "bgGreen"],
-      ["👤 Owner:", `${contract.owner.address} <${contract.owner.name || "unnamed"}>`],
+      ["📝 Contract:", `${fmtAddress(contract.address)} <${contract.name || "unnamed"}>`, "bgGreen"],
+      ["👤 Owner:", `${fmtAddress(contract.owner.address)} <${contract.owner.name || "unnamed"}>`],
       ["--------------------"] as any,
       ["💰 Contract Balance:", fmtBalance(balance)],
     ]),
@@ -220,8 +221,8 @@ export async function fill(
 
   log(
     fmtList([
-      ["📝 Contract:", `${contract.address} <${contract.name || "unnamed"}>`, "bgGreen"],
-      ["👤 Owner:", `${contract.owner.address} <${contract.owner.name || "unnamed"}>`],
+      ["📝 Contract:", `${fmtAddress(contract.address)} <${contract.name || "unnamed"}>`, "bgGreen"],
+      ["👤 Owner:", `${fmtAddress(contract.owner.address)} <${contract.owner.name || "unnamed"}>`],
       ["--------------------"] as any,
       ["💸 Filled for:", fmtBalance(amount)],
       ["💰 Balance:", fmtBalance(balance)],

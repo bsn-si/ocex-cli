@@ -8,7 +8,7 @@ import { Contract } from "../entity/contract"
 import { Coupon } from "../entity/coupon"
 
 import { activateCoupon, addCoupon, burnCoupon, checkCoupon } from "../api"
-import { fmtBalance, fmtList, keyring, log } from "../utils"
+import { fmtAddress, fmtBalance, fmtList, keyring, log } from "../utils"
 import * as contractMethods from "./contract"
 import { config } from "../config"
 
@@ -41,7 +41,6 @@ const _print = (data: Coupon | Coupon[], action?: string) => {
     table.cell("id", record.id)
     table.cell("name", record.name || "<not assigned>")
     table.cell("🎟️ coupon public", record.coupon_public)
-    table.cell("🎈 published", record.published ? "Yes" : "No")
 
     record?.contract &&
       table.cell(
@@ -138,9 +137,7 @@ export async function create(
     new Coupon(),
     opts,
     params,
-    { contract },
-    { amount: amount.toString() },
-    { published: true },
+    { contract, amount: amount.toString() },
   )
 
   await addCoupon(record)
@@ -213,8 +210,8 @@ export async function check(dataSource: DataSource, selector: string) {
     // prettier-ignore
     fmtList([
       ["🎟️ Coupon:", `${coupon.coupon_public} <${coupon.name || "unnamed"}>`, "bgGreen"],
-      ["📝 Contract:", `${coupon.contract.address} <${coupon.contract.name || "unnamed"}>`],
-      ["👤 Owner:", `${coupon.contract.owner.address} <${coupon.contract.owner.name || "unnamed"}>`],
+      ["📝 Contract:", `${fmtAddress(coupon.contract.address)} <${coupon.contract.name || "unnamed"}>`],
+      ["👤 Owner:", `${fmtAddress(coupon.contract.owner.address)} <${coupon.contract.owner.name || "unnamed"}>`],
       ["--------------------"] as any,
       ["🔎 Exists:", isExists ? "Yes" : "Not"],
       ["🔥 Activated:", !isAllowed ? "Yes" : "Not"],
@@ -239,8 +236,8 @@ export async function activate(
     // prettier-ignore
     fmtList([
       ["Coupon:", `${coupon.coupon_public} <${coupon.name || "unnamed"}>`, "bgGreen"],
-      ["📝 Contract:", `${coupon.contract.address} <${coupon.contract.name || "unnamed"}>`],
-      ["👤 Owner:", `${coupon.contract.owner.address} <${coupon.contract.owner.name || "unnamed"}>`],
+      ["📝 Contract:", `${fmtAddress(coupon.contract.address)} <${coupon.contract.name || "unnamed"}>`],
+      ["👤 Owner:", `${fmtAddress(coupon.contract.owner.address)} <${coupon.contract.owner.name || "unnamed"}>`],
       ["--------------------"] as any,
       ["✨ Activated:", `Yes, and funds transfered to '${receiver || coupon.contract.owner.address}'`],
     ]),
@@ -258,8 +255,8 @@ export async function burn(dataSource: DataSource, selector: string) {
     // prettier-ignore
     fmtList([
       ["Coupon:", `${coupon.coupon_public} <${coupon.name || "unnamed"}>`, "bgGreen"],
-      ["📝 Contract:", `${coupon.contract.address} <${coupon.contract.name || "unnamed"}>`],
-      ["👤 Owner:", `${coupon.contract.owner.address} <${coupon.contract.owner.name || "unnamed"}>`],
+      ["📝 Contract:", `${fmtAddress(coupon.contract.address)} <${coupon.contract.name || "unnamed"}>`],
+      ["👤 Owner:", `${fmtAddress(coupon.contract.owner.address)} <${coupon.contract.owner.name || "unnamed"}>`],
       ["--------------------"] as any,
       ["🔥 Burned:", "Yes"],
     ]),

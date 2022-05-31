@@ -10,9 +10,6 @@ export class Contract {
   @Column({ type: "text", nullable: true, unique: true })
   name?: string
 
-  @Column({ type: "boolean", default: false })
-  published: boolean
-
   @Column({ type: "text", unique: true })
   address: string
 

@@ -3,7 +3,7 @@ import { polkadot } from "ocex-api"
 import Table from "easy-table"
 import chalk from "chalk"
 
-import { fmtBalance, fmtList, keyring, log } from "../utils"
+import { fmtAddress, fmtBalance, fmtList, keyring, log } from "../utils"
 import * as contractMethods from "./contract"
 import { ownerBalance } from "../api/owner"
 import { Owner } from "../entity/owner"
@@ -11,11 +11,13 @@ import { config } from "../config"
 
 interface CreateOptions {
   name?: string
+  json?: string
 }
 
 interface UpdateOptions {
   secret?: string
   name?: string
+  json?: string
 }
 
 interface ListOptions {
@@ -30,8 +32,14 @@ const _print = (data: Owner | Owner[], action?: string) => {
   const _row = (record: Owner) => {
     table.cell("id", record.id)
     table.cell("name", record.name || "<not assigned>")
-    table.cell("🗒️ address", record.address)
-    record?.contracts?.length && table.cell("📝 contracts (count)", record.contracts.length)
+
+    table.cell(
+      `🗒️ address (${config.display.ss58 ? "ss58" : "hex"})`,
+      fmtAddress(record.address),
+    )
+
+    record?.contracts?.length &&
+      table.cell("📝 contracts (count)", record.contracts.length)
 
     table.newRow()
   }
@@ -85,12 +93,32 @@ export async function findOneBySelector(
 export async function create(
   dataSource: DataSource,
   secret: string,
-  opts: CreateOptions,
+  { json, name }: CreateOptions,
 ) {
-  const repository = dataSource.getRepository(Owner)
-  const address = polkadot.util.u8aToHex(keyring.addFromUri(secret).addressRaw)
+  if (!secret && !json) {
+    const error = new Error("Need minimum one of [secret] argument or --json option")
+    log(chalk.black.bgRed.bold(error.message))
+    throw error
+  }
 
-  const record = assign(new Owner(), { secret, address }, opts)
+  if (secret && json) {
+    const error = new Error("Choose one of [secret] argument or --json option")
+    log(chalk.black.bgRed.bold(error.message))
+    throw error
+  }
+
+  const repository = dataSource.getRepository(Owner)
+
+  // prettier-ignore
+  const address = polkadot.util.u8aToHex(
+    polkadot.utilCrypto.decodeAddress(
+      secret
+        ? keyring.addFromUri(secret).address
+        : JSON.parse(json).address,
+    ),
+  )
+
+  const record = assign(new Owner(), { name, address, json }, secret && { secret })
   const owner = await repository.save(record)
 
   _print(owner, "created")
@@ -100,20 +128,51 @@ export async function create(
 export async function update(
   dataSource: DataSource,
   selector: string,
-  { secret, name }: UpdateOptions,
+  { secret, name, json }: UpdateOptions,
 ) {
-  if (!name && !secret) {
+  if (!name && !secret && !json) {
     const error = new Error("Need minimum one of options: --secret or --name")
     log(chalk.black.bgRed.bold(error.message))
     throw error
   }
 
+  if (secret && json) {
+    const error = new Error("Choose one of options: --secret or --json")
+    log(chalk.black.bgRed.bold(error.message))
+    throw error
+  }
+
   const repository = dataSource.getRepository(Owner)
-
   const owner = await findOneBySelector(repository, selector)
-  const address = secret && polkadot.util.u8aToHex(keyring.addFromUri(secret).addressRaw)
 
-  assign(owner, secret && { secret }, address && { address }, name && { name })
+  let address
+  if (secret || json) {
+    // prettier-ignore
+    address = polkadot.util.u8aToHex(
+      polkadot.utilCrypto.decodeAddress(
+        secret
+          ? keyring.addFromUri(secret).address
+          : JSON.parse(json).address,
+      ),
+    )
+  }
+
+  if (json && owner.secret) {
+    delete owner.secret
+  }
+
+  if (secret && owner.json) {
+    delete owner.json
+  }
+
+  assign(
+    owner,
+    address && { address },
+    secret && { secret },
+    name && { name },
+    json && { json },
+  )
+
   const updated = await repository.save(owner)
 
   _print(updated, "updated")
@@ -143,7 +202,6 @@ export async function list(dataSource: DataSource, options: ListOptions) {
   })
 
   owners.length > 0 ? _print(owners) : log(chalk.bgBlue.white("List is empty"))
-
   return owners
 }
 
@@ -154,7 +212,7 @@ export async function balance(dataSource: DataSource, selector: string) {
 
   log(
     fmtList([
-      ["👤 Owner:", `${owner.address} <${owner.name || "unnamed"}>`],
+      ["👤 Owner:", `${fmtAddress(owner.address)} <${owner.name || "unnamed"}>`],
       ["--------------------"] as any,
       ["💰 Owner Balance:", fmtBalance(balance)],
     ]),

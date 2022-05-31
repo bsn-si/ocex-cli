@@ -14,6 +14,7 @@ const cmdArguments = {
 const cmdOptions = {
   receiverAddress: ["--address <address>", "coupon receiver address in hex", validator.address],
   contractAddress: ["--address <address>", "contract address in hex", validator.address],
+  ownerJsonPair: ["--json <path>", "encrypted json account", validator.encryptedJson],
   amountUnit: ["--unit <type>", "amount unit type", undefined, amountUnitTypes],
   owner: ["--owner <selector>", "owner of contract - id, name or address in hex", validator.queryAddress],
   contract: ["--contract <selector>", "contract - id, name or address in hex", validator.queryAddress],

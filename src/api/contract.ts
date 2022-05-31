@@ -4,17 +4,18 @@ import chalk from "chalk"
 import path from "path"
 import BN from "bn.js"
 
+import { getClient, getSignerFromOwner } from "./client"
 import { Contract } from "../entity/contract"
-import { keyring, log } from "../utils"
-import { getClient } from "./client"
 import { Owner } from "../entity/owner"
+import { log } from "../utils"
 
-export async function сontractInstantiate(owner: polkadot.KeyringPair) {
+export async function сontractInstantiate(owner: Owner) {
   const wasm = await fs.readFile(path.join(__dirname, "../assets/ocex.wasm"))
+  const pair = await getSignerFromOwner(owner)
   const client = await getClient()
 
   log(chalk.bgBlue.whiteBright("🗂️ Upload & instantiate contract"))
-  const contract = await Ocex.instantiateWithCode(client, owner, wasm)
+  const contract = await Ocex.instantiateWithCode(client, pair, wasm)
   log(chalk.bgBlue.whiteBright("🎆 Contract instantiated"))
   log("\n")
 
@@ -23,7 +24,7 @@ export async function сontractInstantiate(owner: polkadot.KeyringPair) {
 }
 
 export async function contractBalance(record: Contract): Promise<BN> {
-  const pair = keyring.addFromUri(record.owner.secret)
+  const pair = await getSignerFromOwner(record.owner)
   const client = await getClient()
   const { address } = record
 
@@ -34,7 +35,7 @@ export async function contractBalance(record: Contract): Promise<BN> {
 }
 
 export async function contractFillBalance(record: Contract, amount: BN): Promise<BN> {
-  const pair = keyring.addFromUri(record.owner.secret)
+  const pair = await getSignerFromOwner(record.owner)
   const client = await getClient()
   const { address } = record
 
@@ -45,7 +46,7 @@ export async function contractFillBalance(record: Contract, amount: BN): Promise
 }
 
 export async function contractPayback(record: Contract): Promise<boolean> {
-  const pair = keyring.addFromUri(record.owner.secret)
+  const pair = await getSignerFromOwner(record.owner)
   const client = await getClient()
   const { address } = record
 
@@ -55,7 +56,7 @@ export async function contractPayback(record: Contract): Promise<boolean> {
 }
 
 export async function contractTransferOwnership(record: Contract, owner: Owner) {
-  const pair = keyring.addFromUri(record.owner.secret)
+  const pair = await getSignerFromOwner(record.owner)
   const client = await getClient()
   const { address } = record
 

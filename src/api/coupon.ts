@@ -1,12 +1,11 @@
 import { Ocex, Coupon as CouponAPI } from "ocex-api"
 import BN from "bn.js"
 
+import { getClient, getSignerFromOwner } from "./client"
 import { Coupon } from "../entity/coupon"
-import { getClient } from "./client"
-import { keyring } from "../utils"
 
 export async function addCoupon(record: Coupon): Promise<boolean> {
-  const pair = keyring.addFromUri(record.contract.owner.secret)
+  const pair = await getSignerFromOwner(record.contract.owner)
   const client = await getClient()
 
   const { address } = record.contract
@@ -20,7 +19,7 @@ export async function addCoupon(record: Coupon): Promise<boolean> {
 }
 
 export async function checkCoupon(record: Coupon): Promise<[boolean, BN]> {
-  const pair = keyring.addFromUri(record.contract.owner.secret)
+  const pair = await getSignerFromOwner(record.contract.owner)
   const client = await getClient()
 
   const { address } = record.contract
@@ -31,7 +30,7 @@ export async function checkCoupon(record: Coupon): Promise<[boolean, BN]> {
 }
 
 export async function activateCoupon(record: Coupon, receiver?: string) {
-  const pair = keyring.addFromUri(record.contract.owner.secret)
+  const pair = await getSignerFromOwner(record.contract.owner)
   const client = await getClient()
   const { owner } = record.contract
 
@@ -48,7 +47,7 @@ export async function activateCoupon(record: Coupon, receiver?: string) {
 export async function burnCoupon(record: Coupon) {
   const client = await getClient()
 
-  const pair = keyring.addFromUri(record.contract.owner.secret)
+  const pair = await getSignerFromOwner(record.contract.owner)
   const contract = await Ocex.fromAddress(client, pair, record.contract.address)
 
   await contract.burnCoupons([new CouponAPI(record.secret)])

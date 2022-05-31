@@ -41,7 +41,8 @@ export function parse(argv: string[]): CliMethod {
     .addCommand(
       new Command("create")
         .description("create new owner from secret key")
-        .addArgument(getArgument("secretKey"))
+        .addArgument(getArgument("secretKey", true))
+        .addOption(getOption("ownerJsonPair", true))
         .addOption(getOption("name", true))
         .action(setParsed("owner")),
     )
@@ -49,6 +50,7 @@ export function parse(argv: string[]): CliMethod {
       new Command("update")
         .description("!Danger: update owner name or secret")
         .addArgument(getArgument("recordSelector"))
+        .addOption(getOption("ownerJsonPair", true))
         .addOption(getOption("secretKey", true))
         .addOption(getOption("name", true))
         .action(setParsed("owner")),
