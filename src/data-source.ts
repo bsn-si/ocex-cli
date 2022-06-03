@@ -1,13 +1,11 @@
 import { DataSource } from "typeorm"
-import path from "path"
-import os from "os"
 import fs from "fs"
 
 import { Contract } from "./entity/contract"
 import { Coupon } from "./entity/coupon"
 import { Owner } from "./entity/owner"
+import { DATABASE_PATH } from "./config"
 
-const DATABASE_PATH = path.join(os.homedir(), ".ocex/ocex.sqlite")
 const synchronize = !fs.existsSync(DATABASE_PATH)
 
 export const AppDataSource = new DataSource({

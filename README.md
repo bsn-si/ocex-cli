@@ -43,9 +43,39 @@ cd ocex-cli/ && npm run install:global
 ```
 `Tested on MacOS & Linux`
 
+Also you can run cli from docker.
+
+``` bash
+git clone git@github.com:bsn-si/ocex-cli.git
+cd ocex-cli/
+docker build -t ocex-cli:latest .
+docker run ocex-cli:latest --help
+```
+
 ## Before interaction
 For some operations a node RPC is needed, by default `127.0.0.1:9944` is used.
 You can install [substrate-contracts-node](https://github.com/paritytech/substrate-contracts-node).
+
+### Config
+By default you can finds config for cli in `~/.ocex/config.json`, and have these options
+
+``` json
+{
+  // show result for all command
+  "logging": true,
+  // trace errors in output
+  "trace": true,
+  // default endpoint address to node
+  "apiUrl": "ws://127.0.0.1:9944",
+  // display options
+  "display": {
+    // show and log all addresses for owner & contracts in ss58 format, if false show address in hex
+    "ss58": true,
+  },
+}
+```
+
+Also you can set data directory by environment variable `DATA_DIR`, this can be used for different networks or databases.
 
 ## Usage
 Please use `--help` to get info about all commands & options.
@@ -79,6 +109,16 @@ Owner successfully created
 id  name   🗒️ address                                                        
 --  -----  ------------------------------------------------------------------
 1   Alice  0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d
+```
+
+Also for production you can save encrypted json to database, and sign all transactions with password.
+
+```
+➜  ~ ocex-cli owner create --json=/home/anton/MyAccount.Polkadot.json --name=User
+Owner successfully created
+id  name  🗒️ address (ss58)                               
+--  ----  ------------------------------------------------
+1   User  5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty
 ```
 
 #### Update

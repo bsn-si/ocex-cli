@@ -19,7 +19,11 @@ export const config = {
   },
 }
 
-export const CONFIG_PATH = path.join(os.homedir(), ".ocex/config.json")
+export const DEFAULT_DATA_DIR = path.join(os.homedir(), ".ocex")
+export const DATA_DIR = process.env.DATA_DIR || DEFAULT_DATA_DIR
+
+export const DATABASE_PATH = path.join(DATA_DIR, "ocex.sqlite")
+export const CONFIG_PATH = path.join(DATA_DIR, "config.json")
 
 export function extendsConfig() {
   try {
