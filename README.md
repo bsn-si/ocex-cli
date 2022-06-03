@@ -59,7 +59,7 @@ You can install [substrate-contracts-node](https://github.com/paritytech/substra
 ### Config
 By default you can finds config for cli in `~/.ocex/config.json`, and have these options
 
-``` json
+``` js
 {
   // show result for all command
   "logging": true,
