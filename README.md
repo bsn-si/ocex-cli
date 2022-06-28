@@ -49,7 +49,7 @@ Also you can run cli from docker.
 git clone git@github.com:bsn-si/ocex-cli.git
 cd ocex-cli/
 docker build -t ocex-cli:latest .
-docker run ocex-cli:latest --help
+docker run -v /path/in/host:/root/.ocex ocex-cli:latest --help
 ```
 
 ## Before interaction
@@ -76,6 +76,10 @@ By default you can finds config for cli in `~/.ocex/config.json`, and have these
 ```
 
 Also you can set data directory by environment variable `DATA_DIR`, this can be used for different networks or databases.
+In this case the command for the docker would look like this
+```
+docker run -v /path/in/host:/path/write/in/DATADIR ocex-cli:latest --help
+```
 
 ## Usage
 Please use `--help` to get info about all commands & options.
