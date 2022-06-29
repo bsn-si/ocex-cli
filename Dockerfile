@@ -9,4 +9,4 @@ RUN yarn --check-files
 RUN apk del .build-deps
 COPY . .
 RUN yarn build
-ENTRYPOINT [ "dist/index.js" ]
+ENTRYPOINT [ "node", "dist/index.js" ]
