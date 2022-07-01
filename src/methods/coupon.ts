@@ -210,6 +210,8 @@ export async function check(dataSource: DataSource, selector: string) {
     // prettier-ignore
     fmtList([
       ["🎟️ Coupon:", `${coupon.coupon_public} <${coupon.name || "unnamed"}>`, "bgGreen"],
+      ["🎟️ Coupon Secret:", coupon.secret, "bgGreen"],
+
       ["📝 Contract:", `${fmtAddress(coupon.contract.address)} <${coupon.contract.name || "unnamed"}>`],
       ["👤 Owner:", `${fmtAddress(coupon.contract.owner.address)} <${coupon.contract.owner.name || "unnamed"}>`],
       ["--------------------"] as any,
@@ -220,6 +222,24 @@ export async function check(dataSource: DataSource, selector: string) {
   )
 
   return [isAllowed, amount]
+}
+
+export async function show(dataSource: DataSource, selector: string) {
+  const repository = dataSource.getRepository(Coupon)
+  const coupon = await findOneBySelector(repository, selector, true)
+
+  log(
+    // prettier-ignore
+    fmtList([
+      ["🎟️ Coupon:", `${coupon.coupon_public} <${coupon.name || "unnamed"}>`, "bgGreen"],
+      ["🎟️ Coupon Secret:", coupon.secret, "bgGreen"],
+      
+      ["📝 Contract:", `${fmtAddress(coupon.contract.address)} <${coupon.contract.name || "unnamed"}>`],
+      ["👤 Owner:", `${fmtAddress(coupon.contract.owner.address)} <${coupon.contract.owner.name || "unnamed"}>`],
+    ]),
+  )
+
+  return coupon
 }
 
 export async function activate(
@@ -235,7 +255,8 @@ export async function activate(
   log(
     // prettier-ignore
     fmtList([
-      ["Coupon:", `${coupon.coupon_public} <${coupon.name || "unnamed"}>`, "bgGreen"],
+      ["🎟️ Coupon:", `${coupon.coupon_public} <${coupon.name || "unnamed"}>`, "bgGreen"],
+      ["🎟️ Coupon Secret:", coupon.secret, "bgGreen"],
       ["📝 Contract:", `${fmtAddress(coupon.contract.address)} <${coupon.contract.name || "unnamed"}>`],
       ["👤 Owner:", `${fmtAddress(coupon.contract.owner.address)} <${coupon.contract.owner.name || "unnamed"}>`],
       ["--------------------"] as any,
@@ -254,7 +275,8 @@ export async function burn(dataSource: DataSource, selector: string) {
   log(
     // prettier-ignore
     fmtList([
-      ["Coupon:", `${coupon.coupon_public} <${coupon.name || "unnamed"}>`, "bgGreen"],
+      ["🎟️ Coupon:", `${coupon.coupon_public} <${coupon.name || "unnamed"}>`, "bgGreen"],
+      ["🎟️ Coupon Secret:", coupon.secret, "bgGreen"],
       ["📝 Contract:", `${fmtAddress(coupon.contract.address)} <${coupon.contract.name || "unnamed"}>`],
       ["👤 Owner:", `${fmtAddress(coupon.contract.owner.address)} <${coupon.contract.owner.name || "unnamed"}>`],
       ["--------------------"] as any,

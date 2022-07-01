@@ -25,6 +25,7 @@
       "commander": "^9.2.0",
       "easy-table": "^1.2.0",
       "ocex-api": "bsn-si/ocex-api",
+      "ocex-coupon-signature-node": "https://gitpkg.now.sh/bsn-si/ocex-coupon-signature/pkg_node?main",
       "reflect-metadata": "^0.1.13",
       "typeorm": "0.3.6"
    },

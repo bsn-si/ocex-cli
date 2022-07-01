@@ -21,5 +21,7 @@ export async function cli(dataSource: DataSource) {
     if (config.trace) {
       console.error(error)
     }
+    
+    process.exit(1)
   }
 }

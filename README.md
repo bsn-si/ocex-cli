@@ -31,6 +31,7 @@ OCEX smartcontract CLI management tool.
     - [Remove](#remove-2)
     - [List](#list-2)    
     - [Check](#check)
+    - [Show](#show)
     - [Activate](#activate)
     - [Burn](#burn)
 
@@ -50,10 +51,10 @@ git clone git@github.com:bsn-si/ocex-cli.git
 cd ocex-cli/
 
 docker build -t ocex-cli:latest .
-docker run --restart always --network host -v /path/in/host:/root/.ocex ocex-cli:latest --help
+docker run --restart always --network host -v ~/.ocex:/root/.ocex ocex-cli:latest --help
 
 # Also you can add command alias
-alias ocex-cli="docker run --restart always --network host -v /path/in/host:/root/.ocex ocex-cli:latest"
+alias ocex-cli="docker run --restart always --network host -v ~/.ocex:/root/.ocex ocex-cli:latest"
 ocex-cli --help
 ```
 
@@ -297,18 +298,30 @@ id  name          🎟️ coupon public                                         
 ```
 
 #### Check
-You can check coupon and get it's details
+You can check coupon and get it's details (with request via rpc)
 
 ``` bash
 ➜  ~ ocex-cli coupon check SampleCoupon
 🌐 Connect to RPC node: ws://127.0.0.1:9944
-🎟️ Coupon:         0x3e7ea8de731b02a4428e06864809c54e777f99486f0cb3da3e4d58ec49eadd25 <SampleCoupon> 
+🎟️ Coupon:          0x3e7ea8de731b02a4428e06864809c54e777f99486f0cb3da3e4d58ec49eadd25 <SampleCoupon> 
 📝 Contract:        0x693e2e72609187bd24930185e6884e745df59a6df007d5faff9b3db95c328882 <SampleContract> 
 👤 Owner:           0x8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48 <Bob> 
 --------------------  
 🔎 Exists:          Yes 
 🔥 Activated:       Not 
 💰 Amount:          10 Unit (10000000000000 Pico) 
+```
+
+
+#### Show
+You can get coupon details in database with secret key
+
+``` bash
+➜  ~ ocex-cli coupon show Coupon
+🎟️ Coupon:          0x80e71d2a855998025b06a10ddd04b0d7203877b456e3f67ab8f937ab44ad9726 <Coupon> 
+🎟️ Coupon Secret:   0x9e929d38ec23fdf94b1cb3f0c14209f8e9b68843c5e6970f3e4da94176202736 
+📝 Contract:        5FcbhbuToMP2dBo8HKFFC9tBUiXjT3HsE96fMiEMwJrLvNhG <Contract> 
+👤 Owner:           5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY <Alice> 
 ```
 
 #### Activate

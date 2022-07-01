@@ -1,3 +1,4 @@
+import { get_coupon_signature } from "ocex-coupon-signature-node"
 import { Ocex, Coupon as CouponAPI } from "ocex-api"
 import BN from "bn.js"
 
@@ -35,6 +36,7 @@ export async function activateCoupon(record: Coupon, receiver?: string) {
   const { owner } = record.contract
 
   const contract = await Ocex.fromAddress(client, pair, record.contract.address)
+  contract.get_coupon_signature = get_coupon_signature
 
   await contract.activateCoupon(
     new CouponAPI(record.secret),
@@ -49,6 +51,7 @@ export async function burnCoupon(record: Coupon) {
 
   const pair = await getSignerFromOwner(record.contract.owner)
   const contract = await Ocex.fromAddress(client, pair, record.contract.address)
+  contract.get_coupon_signature = get_coupon_signature
 
   await contract.burnCoupons([new CouponAPI(record.secret)])
 

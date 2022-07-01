@@ -161,6 +161,12 @@ export function parse(argv: string[]): CliMethod {
         .action(setParsed("coupon")),
     )
     .addCommand(
+      new Command("show")
+        .description("Show coupon record in db with secret")
+        .addArgument(getArgument("recordSelector"))
+        .action(setParsed("coupon")),
+    )
+    .addCommand(
       new Command("activate")
         .description("Activate coupon, if don't have receiver - owner receive funds")
         .addArgument(getArgument("recordSelector"))
