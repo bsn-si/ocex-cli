@@ -1,4 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/bash
+shopt -s expand_aliases
+
 TEST_DIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
 PROJECT_DIR="$(dirname "$TEST_DIR")"
 
