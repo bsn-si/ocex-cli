@@ -61,6 +61,7 @@ ocex-cli --help
 ## Before interaction
 For some operations a node RPC is needed, by default `127.0.0.1:9944` is used.
 You can install [substrate-contracts-node](https://github.com/paritytech/substrate-contracts-node).
+At now we tested that cli with version `0.13.0`.
 
 ### Config
 By default you can finds config for cli in `~/.ocex/config.json`, and have these options
