@@ -57,6 +57,8 @@ docker run --restart always --network host -v ~/.ocex:/root/.ocex ocex-cli:lates
 alias ocex-cli="docker run --restart always --network host -v ~/.ocex:/root/.ocex ocex-cli:latest"
 ocex-cli --help
 ```
+How to install:<br />
+[![How to install](https://user-images.githubusercontent.com/98888366/177416738-cacc4e28-9478-4b4d-9f35-643910db0f46.jpg)](https://www.youtube.com/watch?v=qw6D-8Ktp9Q)
 
 ## Before interaction
 For some operations a node RPC is needed, by default `127.0.0.1:9944` is used.
@@ -103,6 +105,8 @@ Commands:
   owner           Interact with owner
   help [command]  display help for command
 ```
+How to run tests:<br />
+[![How to run tests](https://user-images.githubusercontent.com/98888366/177418080-1ed33dda-5bd4-44ef-93f2-8441bf82baad.jpg)](https://www.youtube.com/watch?v=fNvra1Op8_c)
 
 ### Owners
 An owner is a user who manages the smart-contract and pays for all management transactions. All contracts need an owner to be assigned.
