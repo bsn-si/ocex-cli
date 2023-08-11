@@ -377,5 +377,11 @@ id  name          🎟️ coupon public                                         
 1   SampleCoupon  0x3e7ea8de731b02a4428e06864809c54e777f99486f0cb3da3e4d58ec49eadd25  Yes         
 ```
 
+## Related repos
+- OCEX [coupon activation dapp](https://github.com/bsn-si/ocex-activation)
+- OCEX [Ink! smart contract](https://github.com/bsn-si/ocex-smartcontract)
+- OCEX smart contract [API client](https://github.com/bsn-si/ocex-api)
+- JS/Wasm [library](https://github.com/bsn-si/ocex-coupon-signature) for coupon activation signatures
+
 ## License
 [Apache License 2.0](https://github.com/bsn-si/ocex-cli/blob/main/LICENSE) © Bela Supernova ([bsn.si](https://bsn.si))
